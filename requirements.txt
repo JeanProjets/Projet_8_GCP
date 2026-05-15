@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+tensorflow
+pandas
+numpy
+pillow
+streamlit
+albumentations
+matplotlib
+scipy
+azure-monitor-opentelemetry
