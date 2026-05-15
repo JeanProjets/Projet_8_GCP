@@ -10,8 +10,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ app/
 COPY data/ data/
 
-# Port par défaut sur Hugging Face Spaces
-EXPOSE 7860
+# --- Configuration du port (Décommenter selon le Cloud choisi) ---
 
-# Lancement de Streamlit
+# Pour Google Cloud Run (ou local standard) :
+# EXPOSE 8501
+# CMD ["streamlit", "run", "app/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+
+# Pour Hugging Face Spaces (Port 7860 par défaut) :
+EXPOSE 7860
 CMD ["streamlit", "run", "app/app.py", "--server.port", "7860", "--server.address", "0.0.0.0"]

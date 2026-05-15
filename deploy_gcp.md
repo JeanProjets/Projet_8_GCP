@@ -1,17 +1,27 @@
 # Déploiement sur Google Cloud Platform (GCP) avec Cloud Run
 
 Félicitations pour le nettoyage du projet ! Nous avons désormais un dossier propre, prêt à être envoyé sur GCP.
-Puisque le modèle `best_unet_model.keras` est lourd et que nous l'avons ajouté à `.gitignore`, il ne sera pas poussé sur GitHub. **La solution la plus simple est de déployer directement depuis ton Mac en utilisant le terminal**.
 
 Google Cloud propose une commande magique : `gcloud run deploy --source .`. 
-Cette commande va prendre tout ton dossier local (incluant le modèle .keras, grâce au `.gcloudignore`), l'envoyer de façon sécurisée à Google, construire le conteneur Docker dans le cloud, et le déployer.
+Cette commande va prendre tout ton dossier local, l'envoyer de façon sécurisée à Google, construire le conteneur Docker dans le cloud, et le déployer.
 
-Voici le guide étape par étape :
+## 🔄 Comment basculer entre GCP et Hugging Face ?
+
+Si tu as d'abord testé Hugging Face mais que tu veux déployer sur GCP (ou inversement), tu dois ajuster les ports (GCP préfère généralement les ports 8000/8501 standards, et Hugging Face exige le port 7860).
+
+**Pour passer sur GCP :**
+1. Ouvre `api/Dockerfile` et décommente les deux lignes sous "Pour Google Cloud Run" (et commente celles de Hugging Face).
+2. Ouvre `app/Dockerfile` et décommente les deux lignes sous "Pour Google Cloud Run" (et commente celles de Hugging Face).
+3. Ouvre `app/app.py` et commente la ligne `API_URL` de Hugging Face pour décommenter celle de GCP (Port 8000).
+
+*(Fais l'inverse exact pour revenir sur Hugging Face !)*
+
+---
 
 ## Étape 1 : Prérequis sur Google Cloud
 1. Va sur [Google Cloud Console](https://console.cloud.google.com/).
 2. Crée un nouveau projet (ex: `projet-8-vision`).
-3. Assure-toi que la **Facturation (Billing)** est activée pour ce projet.
+3. Assure-toi que la **Facturation (Billing)** est activée pour ce projet. *(Attention : Une carte bleue est requise par Google pour vérifier ton identité, mais tu ne paieras rien si tu restes sous les 2 millions de requêtes gratuites par mois !)*
 4. Active l'API **Cloud Run** et **Cloud Build** via la barre de recherche en haut.
 
 ## Étape 2 : Installer le SDK Google Cloud sur ton Mac
@@ -42,7 +52,7 @@ gcloud run deploy p8-api \
 ```
 
 **Pourquoi ces options ?**
-- `--source .` : Envoie tout le code (y compris le dossier `models/` et le gros fichier keras).
+- `--source .` : Envoie tout le code (y compris le dossier `models/`).
 - `--memory 2Gi` : Donne 2 Go de RAM au conteneur pour pouvoir charger le réseau de neurones Keras sans crasher.
 - `--working-dir="/app/api"` : Dit au conteneur Docker de se placer dans le bon dossier.
 
@@ -64,9 +74,5 @@ gcloud run deploy p8-streamlit \
   --command "streamlit,run,app/app.py,--server.port,8501,--server.address,0.0.0.0" \
   --set-env-vars="API_URL=URL_API_DE_L_ETAPE_3"
 ```
-
-## Bonus : GitHub Actions (CI/CD)
-Vu que le modèle n'est pas sur GitHub, un pipeline d'intégration continue "classique" (qui build à partir de GitHub seul) ne fonctionnera pas out-of-the-box sans héberger le modèle sur un Google Cloud Storage (Bucket). 
-Pour une première mise en production simple et rapide, **la méthode `gcloud run deploy` depuis ton terminal est de loin la plus facile et recommandée**. 
 
 C'est prêt ! Tu peux tester ton interface Streamlit avec l'URL publique générée.

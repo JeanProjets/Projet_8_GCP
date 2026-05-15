@@ -13,6 +13,10 @@ st.title("🚗 Segmentation Sémantique Embarquée")
 st.markdown("Interface d'Inférence interagissant en direct avec l'API FastAPI construite lors de la Phase 5.")
 
 # Cible du Microservice API
+# --- Configuration du port local (Décommenter selon le Cloud choisi) ---
+# Si tu testes pour GCP (Port 8000) :
+# API_URL = os.getenv("API_URL", "http://localhost:8000")
+# Si tu testes pour Hugging Face (Port 7860) :
 API_URL = os.getenv("API_URL", "http://localhost:7860")
 
 # --- 2. Fonctions Méthodologiques ---
@@ -96,4 +100,5 @@ if st.sidebar.button("🤖 Lancer l'Inférence de l'API"):
                 
         except requests.exceptions.ConnectionError:
             st.error(f"💥 ERREUR CRITIQUE : L'API est injoignable sur l'URL ciblée (`{API_URL}`).")
-            st.info("👉 Si vous testez en local, assurez-vous d'avoir lancé le serveur FastAPI via : `cd api && uvicorn main:app --port 7860` et vérifiez que API_URL correspond bien à localhost:7860 dans ce script.")
+            # st.info("👉 Si vous testez en local pour GCP, lancez le serveur FastAPI via : `cd api && uvicorn main:app --port 8000` et vérifiez l'API_URL.")
+            st.info("👉 Si vous testez en local pour Hugging Face, lancez le serveur FastAPI via : `cd api && uvicorn main:app --port 7860` et vérifiez l'API_URL.")

@@ -17,6 +17,12 @@ COPY models/ models/
 
 WORKDIR /app/api
 
-EXPOSE 7860
+# --- Configuration du port (Décommenter selon le Cloud choisi) ---
 
+# Pour Google Cloud Run (ou local standard) :
+# EXPOSE 8000
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Pour Hugging Face Spaces (Port 7860 par défaut) :
+EXPOSE 7860
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
