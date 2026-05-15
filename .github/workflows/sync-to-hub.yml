@@ -4,13 +4,22 @@ on:
     branches: [main]
 
 jobs:
-  deploy-api:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          fetch-depth: 0
-      - name: Prepare README for API
+          python-version: '3.11'
+          
+      - name: Install huggingface_hub
+        run: pip install huggingface_hub
+        
+      - name: Deploy API Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           cat <<EOF > README.md
           ---
@@ -24,23 +33,27 @@ jobs:
           dockerfile: api/Dockerfile
           ---
           EOF
-      - name: Push to Hugging Face API Space
+          
+          python -c "
+          from huggingface_hub import HfApi
+          import os
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          try:
+              api.upload_folder(
+                  folder_path='.',
+                  repo_id='JeanProjets/projet-8-api',
+                  repo_type='space',
+                  ignore_patterns=['.git*', '.github', '.venv', '__pycache__', 'app', 'deploy*.md']
+              )
+              print('API Space deployed successfully.')
+          except Exception as e:
+              print(f'Error deploying API Space: {e}')
+              exit(1)
+          "
+
+      - name: Deploy App Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add README.md
-          git commit -m "Configure Hugging Face Space for API" || true
-          git push -f https://JeanProjets:${HF_TOKEN}@huggingface.co/spaces/JeanProjets/projet-8-api HEAD:main
-
-  deploy-app:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Prepare README for App
         run: |
           cat <<EOF > README.md
           ---
@@ -54,12 +67,20 @@ jobs:
           dockerfile: app/Dockerfile
           ---
           EOF
-      - name: Push to Hugging Face App Space
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add README.md
-          git commit -m "Configure Hugging Face Space for App" || true
-          git push -f https://JeanProjets:${HF_TOKEN}@huggingface.co/spaces/JeanProjets/projet-8-app HEAD:main
+          
+          python -c "
+          from huggingface_hub import HfApi
+          import os
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          try:
+              api.upload_folder(
+                  folder_path='.',
+                  repo_id='JeanProjets/projet-8-app',
+                  repo_type='space',
+                  ignore_patterns=['.git*', '.github', '.venv', '__pycache__', 'models', 'api', 'deploy*.md']
+              )
+              print('App Space deployed successfully.')
+          except Exception as e:
+              print(f'Error deploying App Space: {e}')
+              exit(1)
+          "
