@@ -13,7 +13,7 @@ st.title("🚗 Segmentation Sémantique Embarquée")
 st.markdown("Interface d'Inférence interagissant en direct avec l'API FastAPI construite lors de la Phase 5.")
 
 # Cible du Microservice API
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = os.getenv("API_URL", "http://localhost:7860")
 
 # --- 2. Fonctions Méthodologiques ---
 @st.cache_data
@@ -96,4 +96,4 @@ if st.sidebar.button("🤖 Lancer l'Inférence de l'API"):
                 
         except requests.exceptions.ConnectionError:
             st.error(f"💥 ERREUR CRITIQUE : L'API est injoignable sur l'URL ciblée (`{API_URL}`).")
-            st.info("👉 Si vous testez en local, assurez-vous d'avoir lancé le serveur FastAPI via : `cd Projet_8_API && uvicorn main:app --reload` et vérifiez que API_URL correspond bien à localhost:8000 dans ce script.")
+            st.info("👉 Si vous testez en local, assurez-vous d'avoir lancé le serveur FastAPI via : `cd api && uvicorn main:app --port 7860` et vérifiez que API_URL correspond bien à localhost:7860 dans ce script.")
