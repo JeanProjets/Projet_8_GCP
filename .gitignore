@@ -225,6 +225,4 @@ private.txt
 
 # Modèles trop lourds pour GitHub (limite 100 Mo)
 best_mobilenet_unet_model.keras
-# Large models
-*.keras
 
