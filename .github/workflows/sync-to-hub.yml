@@ -1,0 +1,65 @@
+name: Deploy to Hugging Face Spaces
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare README for API
+        run: |
+          cat <<EOF > README.md
+          ---
+          title: Projet 8 API
+          emoji: 🚀
+          colorFrom: blue
+          colorTo: indigo
+          sdk: docker
+          pinned: false
+          app_port: 7860
+          dockerfile: api/Dockerfile
+          ---
+          EOF
+      - name: Push to Hugging Face API Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add README.md
+          git commit -m "Configure Hugging Face Space for API" || true
+          git push -f https://JeanProjets:${HF_TOKEN}@huggingface.co/spaces/JeanProjets/projet-8-api HEAD:main
+
+  deploy-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare README for App
+        run: |
+          cat <<EOF > README.md
+          ---
+          title: Projet 8 Streamlit
+          emoji: 🚗
+          colorFrom: red
+          colorTo: orange
+          sdk: docker
+          pinned: false
+          app_port: 7860
+          dockerfile: app/Dockerfile
+          ---
+          EOF
+      - name: Push to Hugging Face App Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add README.md
+          git commit -m "Configure Hugging Face Space for App" || true
+          git push -f https://JeanProjets:${HF_TOKEN}@huggingface.co/spaces/JeanProjets/projet-8-app HEAD:main
