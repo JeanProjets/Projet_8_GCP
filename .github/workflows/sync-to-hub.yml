@@ -21,6 +21,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          # Création du README.md pour l'API
           cat <<EOF > README.md
           ---
           title: Projet 8 API
@@ -29,10 +30,11 @@ jobs:
           colorTo: indigo
           sdk: docker
           pinned: false
-          app_port: 7860
-          dockerfile: api/Dockerfile
           ---
           EOF
+          
+          # Copie du Dockerfile à la racine pour que Hugging Face le trouve par défaut
+          cp api/Dockerfile Dockerfile
           
           python -c "
           from huggingface_hub import HfApi
@@ -55,6 +57,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          # Création du README.md pour l'App
           cat <<EOF > README.md
           ---
           title: Projet 8 Streamlit
@@ -63,10 +66,11 @@ jobs:
           colorTo: yellow
           sdk: docker
           pinned: false
-          app_port: 7860
-          dockerfile: app/Dockerfile
           ---
           EOF
+          
+          # Copie du Dockerfile à la racine pour que Hugging Face le trouve par défaut
+          cp app/Dockerfile Dockerfile
           
           python -c "
           from huggingface_hub import HfApi
