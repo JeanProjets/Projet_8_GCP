@@ -1,65 +1,47 @@
-# Déploiement sur Hugging Face Spaces (100% Gratuit)
+# Déploiement Automatisé sur Hugging Face Spaces (100% Gratuit)
 
 Hugging Face Spaces est la plateforme idéale pour héberger ce projet d'école gratuitement sans avoir besoin d'entrer une carte bancaire.
-Étant donné que ton modèle principal `best_unet_model.keras` fait 23 Mo, il passe parfaitement sur GitHub et sur Hugging Face sans avoir besoin de configurations complexes (pas besoin de Git LFS).
+Étant donné que ton modèle principal `best_unet_model.keras` fait 23 Mo, il passe parfaitement sur GitHub.
 
-Puisque nous avons conçu l'architecture en deux microservices distincts (API et Application Streamlit), nous allons créer **deux Spaces** sur Hugging Face.
+Grâce à la nouvelle **GitHub Action** que nous avons mise en place (`.github/workflows/sync-to-hub.yml`), le déploiement est désormais **100% automatisé**. Dès que tu pousses du code sur la branche `main` de ton GitHub, l'action se charge de créer les bons fichiers `README.md` avec les bonnes métadonnées (le port `7860`, le bon `Dockerfile`) et d'envoyer le code à tes espaces Hugging Face.
 
-## Étape 1 : Créer le Space pour l'API (FastAPI)
+Il te suffit de suivre ces étapes d'initialisation **une seule fois** :
+
+## Étape 1 : Préparer tes Spaces sur Hugging Face
+
+Pour que l'automatisation fonctionne, les conteneurs doivent exister sur ton compte Hugging Face.
 
 1. Connecte-toi sur [Hugging Face](https://huggingface.co/) et clique sur **"New Space"** en haut à droite.
-2. Remplis les informations :
-   - **Space name** : `projet-8-api` (par exemple).
-   - **License** : MIT (ou laisse vide).
+2. Crée le Space de l'API :
+   - **Space name** : `projet-8-api` *(Attention : respecte exactement cette casse ou modifie le script Github Action).*
    - **Select the Space SDK** : Choisis **Docker** (puis "Blank" s'il te propose des sous-options).
    - **Space Hardware** : Laisse sur la version **Gratuite (Free)** (2 vCPU, 16GB RAM).
    - Clique sur **"Create Space"**.
-3. Une fois créé, Hugging Face te propose d'ajouter des fichiers. L'idéal est de lier ton compte GitHub :
-   - Rends-toi dans les **Settings** (Paramètres) de ton Space Hugging Face.
-   - Cherche la section permettant de connecter ton dépôt GitHub (ou pousse simplement le code actuel sur l'URL Git que Hugging Face te fournit).
-   - **IMPORTANT** : Dans la configuration du Space (ou dans le fichier README.md généré par HF au tout début de ton repo côté HF), ajoute ces métadonnées en haut de ton fichier :
-     ```yaml
-     ---
-     title: Projet 8 API
-     emoji: 🚀
-     colorFrom: blue
-     colorTo: indigo
-     sdk: docker
-     pinned: false
-     app_port: 7860
-     dockerfile: api/Dockerfile
-     ---
-     ```
-     *L'option `dockerfile: api/Dockerfile` est magique : elle dit à Hugging Face de construire l'image avec ce fichier précis.*
-4. Ton API va "Build" (se construire) puis "Run".
-5. Une fois que c'est au vert (Running), **copie l'URL de ton API** (disponible via "App" -> clique droit "Inspect" ou via le menu "Embed this space"). Elle ressemblera à `https://ton-pseudo-projet-8-api.hf.space`.
+3. Recommence l'opération pour créer le Space de l'Application :
+   - **Space name** : `projet-8-app`
+   - **Select the Space SDK** : Choisis **Docker** également.
 
-## Étape 2 : Créer le Space pour l'App (Streamlit)
+## Étape 2 : Lier les deux espaces avec la variable d'environnement
 
-1. Crée un **deuxième "New Space"** sur Hugging Face.
-2. Remplis les informations :
-   - **Space name** : `projet-8-app`.
-   - **Select the Space SDK** : Choisis **Docker** (pas Streamlit natif, car notre Dockerfile est configuré sur mesure).
-3. Va dans les **Settings** de ce nouveau Space et cherche la section **"Variables and secrets"**.
-   - Ajoute un **"New Secret"** ou une **"New Environment Variable"**.
+Ton application Streamlit (`projet-8-app`) a besoin de savoir où se trouve ton API (`projet-8-api`) pour lui envoyer les images.
+
+1. Va sur la page de ton Space **`projet-8-api`** et copie son URL publique (elle ressemble à `https://ton-pseudo-projet-8-api.hf.space`). Tu peux la trouver en cliquant sur "App" ou sur le bouton "Embed this space".
+2. Va dans les **Settings** (Paramètres) de ton Space **`projet-8-app`**.
+3. Cherche la section **"Variables and secrets"**.
+4. Ajoute une **"New Environment Variable"** (ou "New Secret") :
    - Nom (Name) : `API_URL`
-   - Valeur (Value) : L'URL de l'étape précédente (ex: `https://ton-pseudo-projet-8-api.hf.space`).
-4. Connecte ton code GitHub (ou pousse-le) exactement comme à l'étape 1.
-5. Dans le fichier `README.md` de ce deuxième Space côté Hugging Face, ajoute ces métadonnées :
-     ```yaml
-     ---
-     title: Projet 8 Streamlit
-     emoji: 🚗
-     colorFrom: red
-     colorTo: orange
-     sdk: docker
-     pinned: false
-     app_port: 7860
-     dockerfile: app/Dockerfile
-     ---
-     ```
+   - Valeur (Value) : L'URL que tu as copiée (ex: `https://ton-pseudo-projet-8-api.hf.space`).
 
-## C'est fini ! 🎉
-Hugging Face va construire ton Docker Streamlit. Une fois terminé, tu auras accès à ton interface Streamlit publique et elle communiquera avec ton API Hugging Face !
+## Étape 3 : Laisser la Magie GitHub Opérer !
+
+Puisque tu as déjà configuré le secret `HF_TOKEN` dans ton GitHub, tout est prêt.
+
+- Si le code est déjà sur ton GitHub, rends-toi sur la page de ton dépôt GitHub, dans l'onglet **"Actions"**.
+- Tu devrais voir un workflow nommé **"Deploy to Hugging Face Spaces"**.
+- Tu peux le relancer manuellement (bouton "Re-run all jobs") ou simplement faire une petite modification dans un fichier de ton projet (comme ajouter un espace dans le `README.md`) puis faire un `git push`.
+- L'Action va s'exécuter. Si tu regardes les logs de l'Action, tu verras qu'elle pousse ton code vers `projet-8-api` puis vers `projet-8-app`.
+
+**C'est fini ! 🎉**
+Dès que l'Action est terminée, retourne sur tes pages Hugging Face. Elles passeront du statut "Building" à "Running", et ton application complète sera en ligne !
 
 *Rappel : Si tu ne visites pas ton application pendant 48 heures, Hugging Face la mettra en pause pour économiser de l'énergie. Il suffira de retourner sur la page et de cliquer sur "Restart" pour la réveiller en 2 minutes.*
