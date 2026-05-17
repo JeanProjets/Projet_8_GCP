@@ -17,7 +17,6 @@ Faire une EDA:
     - Le mask labelIds remappé vers les 8 catégories
     - Distribution des classes par image (histogrammes)
 
-Faire tourner le google colab https://colab.research.google.com/drive/1jZ2tdEyJ2xaERUCwyQ5juwPJrEyIAtBN?usp=sharing#scrollTo=O9oKKrUPQD9s
 L'objectif est juste d'obtenir un modèle où la segmentation est correcte.
 Mettre le modèle dans l'api et le déployer.
 

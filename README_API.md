@@ -1,11 +1,11 @@
-Ce dossier, P7, est le projet 7 avant que je ne fasse le docker init. J'ai cloné le projet qui s'appelle maintenant Projet_7 dans lequel je fais le docker init.
+Ce dossier, P8, est le projet 8 avant que je ne fasse le docker init. J'ai cloné le projet qui s'appelle maintenant Projet_8 dans lequel je fais le docker init.
 
 
 Build l'image Docker:
 
 docker build \
 -t predictionsentiments \
--f Projet_7_API/Dockerfile Projet_7_API
+-f Projet_8/Dockerfile Projet_8
 
 Runner l'image Docker:
 docker run -p 8000:8000 --name predictionsentiments_container predictionsentiments
@@ -25,7 +25,7 @@ Ensuite, aller à http://127.0.0.1:5000/
 
 
 # Lancer l'application
-cd Projet_8_API
+cd Projet_8
 uvicorn main:app --host 0.0.0.0 --port 8000
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
