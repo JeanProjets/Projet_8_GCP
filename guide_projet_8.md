@@ -1,4 +1,4 @@
-# 🚗 Guide Complet — Projet 8 : Déploiement d'un Modèle de Segmentation d'Images
+# Guide Complet — Projet 8 : Déploiement d'un Modèle de Segmentation d'Images
 
 > **Contexte** : Tu es ingénieur IA chez *Future Vision Transport*. Tu conçois le module de **segmentation d'images** dans une chaîne de vision embarquée pour véhicules autonomes. Le dataset est **Cityscapes**, le framework imposé est **Keras**, et tu dois livrer un modèle + API + application web déployés sur le Cloud.
 
@@ -43,7 +43,7 @@ echo "venv_projet8/\ndata/\nmodels/*.h5\n__pycache__/" > .gitignore
 ## Phase 1 — Comprendre les données Cityscapes
 
 ### 1.1 Télécharger le jeu de données complet
-> ⚠️ **Observation** : Ton dossier [data/](file:///Users/j/Documents/OC_Inge_IA/Projet_8/data) contient actuellement uniquement les **annotations gtFine** (masks de segmentation), pas les images brutes. Tu dois télécharger les images `leftImg8bit` depuis [cityscapes-dataset.com](https://www.cityscapes-dataset.com/).
+> **Observation** : Ton dossier [data/](file:///Users/j/Documents/OC_Inge_IA/Projet_8/data) contient actuellement uniquement les **annotations gtFine** (masks de segmentation), pas les images brutes. Tu dois télécharger les images `leftImg8bit` depuis [cityscapes-dataset.com](https://www.cityscapes-dataset.com/).
 
 - **Why** : Ton modèle prend en entrée les **images caméra** (leftImg8bit) et doit prédire les **masks de segmentation** (gtFine). Sans les images, tu ne peux pas entraîner.
 - **Notions** : *supervised learning*, notion d'images d'entrée vs. ground truth / labels.
@@ -182,7 +182,7 @@ Techniques à appliquer :
 - **Random crop + resize**
 - **Ajout de bruit gaussien**
 
-> ⚠️ L'augmentation doit être appliquée **identiquement** à l'image ET au mask !
+> L'augmentation doit être appliquée **identiquement** à l'image ET au mask !
 
 - **Why** : Le livrable demande explicitement des "gains obtenus avec les approches d'augmentation des données". L'augmentation permet de régulariser le modèle et d'augmenter virtuellement la taille du dataset.
 - **Notions** : *data augmentation*, bibliothèque `albumentations` (applique les mêmes transformations géométriques à l'image et au mask), *overfitting prevention*.
@@ -285,10 +285,10 @@ Calculer les métriques finales sur le test set (Berlin, Bielefeld, Bonn, Leverk
 
 | Critère | Flask | FastAPI |
 |---------|-------|---------|
-| Facilité | ✅ Plus simple | ⚠️ Async concepts |
-| Performance | ⚠️ Synchrone | ✅ Asynchrone natif |
-| Documentation auto | ❌ | ✅ Swagger/OpenAPI inclus |
-| Typing | ❌ | ✅ Pydantic intégré |
+| Facilité | Plus simple | Async concepts |
+| Performance | Synchrone | Asynchrone natif |
+| Documentation auto | | Swagger/OpenAPI inclus |
+| Typing | | Pydantic intégré |
 
 > **Recommandation** : FastAPI — la doc auto est un vrai plus pour Laura et la soutenance.
 
@@ -356,7 +356,7 @@ L'application doit permettre :
 import streamlit as st
 import requests
 
-st.title("🚗 Segmentation d'Images - Future Vision Transport")
+st.title("Segmentation d'Images - Future Vision Transport")
 
 # Liste des images disponibles
 image_ids = get_available_image_ids()
@@ -394,11 +394,11 @@ if st.button("Lancer la prédiction"):
 
 | Plateforme | Coût | Difficulté | GPU |
 |-----------|------|-----------|-----|
-| **Render** | Gratuit (limité) | ⭐⭐ | ❌ |
-| **Railway** | Gratuit ($5 crédit) | ⭐⭐ | ❌ |
+| **Render** | Gratuit (limité) | ⭐⭐ | |
+| **Railway** | Gratuit ($5 crédit) | ⭐⭐ | |
 | **Azure Web App** | Free tier disponible | ⭐⭐⭐ | Option payante |
-| **Google Cloud Run** | Free tier généreux | ⭐⭐⭐ | ❌ |
-| **PythonAnywhere** | Gratuit (très limité) | ⭐ | ❌ |
+| **Google Cloud Run** | Free tier généreux | ⭐⭐⭐ | |
+| **PythonAnywhere** | Gratuit (très limité) | ⭐ | |
 | **AWS (EC2/Lambda)** | Free tier 12 mois | ⭐⭐⭐⭐ | Option payante |
 
 - **Why** : Le déploiement Cloud est obligatoire pour la soutenance. Tu dois faire une démo en live et l'enregistrer. Choisis en fonction de ton budget et de ta familiarité.
@@ -431,7 +431,7 @@ Deux déploiements séparés :
 
 ### 7.4 Enregistrer la démo pendant la soutenance
 
-> ⚠️ **Important** : Le sujet précise que l'évaluateur et l'étudiant doivent **enregistrer la démo** pendant la soutenance pour que le jury puisse la visionner. Tu pourras ensuite couper le service Cloud pour éviter les coûts.
+> **Important** : Le sujet précise que l'évaluateur et l'étudiant doivent **enregistrer la démo** pendant la soutenance pour que le jury puisse la visionner. Tu pourras ensuite couper le service Cloud pour éviter les coûts.
 
 - **Why** : C'est une exigence explicite du sujet. Prépare un outil d'enregistrement d'écran (OBS, QuickTime, etc.).
 - **Notions** : *screen recording*, préparation de démo.
@@ -496,7 +496,7 @@ Préparer un script de démo :
 
 ---
 
-## ✅ Checklist des Livrables
+## Checklist des Livrables
 
 | # | Livrable | Format | Nommage |
 |---|----------|--------|---------|
@@ -506,11 +506,11 @@ Préparer un script de démo :
 | 4 | **Note technique** (~10 pages) | PDF | `Nom_Prénom_4_note_technique_mmaaaa` |
 | 5 | **Présentation** (max 30 slides) | PPTX/PDF | `Nom_Prénom_5_presentation_mmaaaa` |
 
-> ⚠️ Tout doit être dans un **zip** nommé `Titre_du_projet_nom_prénom`.
+> Tout doit être dans un **zip** nommé `Titre_du_projet_nom_prénom`.
 
 ---
 
-## 🎯 Notions Clés à Maîtriser (Résumé)
+## Notions Clés à Maîtriser (Résumé)
 
 | Domaine | Notions |
 |---------|---------|

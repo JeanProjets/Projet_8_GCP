@@ -41,7 +41,7 @@ Puisque tu as déjà configuré le secret `HF_TOKEN` dans ton GitHub, tout est p
 - Tu peux le relancer manuellement (bouton "Re-run all jobs") ou simplement faire une petite modification dans un fichier de ton projet (comme ajouter un espace dans le `README.md`) puis faire un `git push`.
 - L'Action va s'exécuter. Si tu regardes les logs de l'Action, tu verras qu'elle pousse ton code vers `projet-8-api` puis vers `projet-8-app`.
 
-**C'est fini ! 🎉**
+**C'est fini ! **
 Dès que l'Action est terminée, retourne sur tes pages Hugging Face. Elles passeront du statut "Building" à "Running", et ton application complète sera en ligne !
 
 *Rappel : Si tu ne visites pas ton application pendant 48 heures, Hugging Face la mettra en pause pour économiser de l'énergie. Il suffira de retourner sur la page et de cliquer sur "Restart" pour la réveiller en 2 minutes.*

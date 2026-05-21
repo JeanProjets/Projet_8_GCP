@@ -7,9 +7,9 @@ import base64
 import io
 
 # --- 1. Configuration UI ---
-st.set_page_config(page_title="Future Vision Transport - Démos", layout="wide", page_icon="🚗")
+st.set_page_config(page_title="Future Vision Transport - Démos", layout="wide", page_icon="")
 
-st.title("🚗 Segmentation Sémantique Embarquée")
+st.title("Segmentation Sémantique Embarquée")
 st.markdown("Interface d'Inférence interagissant en direct avec l'API FastAPI construite lors de la Phase 5.")
 
 # Cible du Microservice API
@@ -36,11 +36,11 @@ def load_available_images():
 images_list = load_available_images()
 
 if not images_list:
-    st.error("⚠️ **Stop !** Dossier des images introuvable. J'ai cherché dans `data/P8_Cityscapes_leftImg8bit_trainvaltest`. Êtes-vous sûr d'avoir lancé `streamlit run app/app.py` depuis la racine de `Projet_8` ?")
+    st.error("**Stop !** Dossier des images introuvable. J'ai cherché dans `data/P8_Cityscapes_leftImg8bit_trainvaltest`. Êtes-vous sûr d'avoir lancé `streamlit run app/app.py` depuis la racine de `Projet_8` ?")
     st.stop()
 
 # --- 3. Barre de Menu (Sidebar) ---
-st.sidebar.header("🕹 Tableau de Bord")
+st.sidebar.header("Tableau de Bord")
 st.sidebar.markdown("Sélectionnez l'image issue des caméras embarquées pour la transmettre au réseau de neurones.")
 
 # On allège visuellement la liste déroulante en n'affichant que le nom du fichier
@@ -54,10 +54,10 @@ gt_color_filename = selected_filename.replace('_leftImg8bit.png', '_gtFine_color
 gt_color_path = os.path.join("data/P8_Cityscapes_gtFine_trainvaltest/gtFine/test/", city_name, gt_color_filename)
 
 # --- 4. Le Client REST ---
-if st.sidebar.button("🤖 Lancer l'Inférence de l'API"):
+if st.sidebar.button("Lancer l'Inférence de l'API"):
     st.markdown("---")
     
-    with st.spinner("⏳ Transmission sécurisée à l'API FastAPI en cours..."):
+    with st.spinner("Transmission sécurisée à l'API FastAPI en cours..."):
         try:
             # Sérialisation : On capture l'image en données binaires pour le flux HTTP sortant
             with open(selected_path, "rb") as image_file:
@@ -70,35 +70,35 @@ if st.sidebar.button("🤖 Lancer l'Inférence de l'API"):
                 # L'API nous renvoie désormais directement l'image au format PNG ! (StreamingResponse)
                 predicted_mask = Image.open(io.BytesIO(response.content))
                 
-                st.success("✅ Triangulation serveur réussie ! Prédiction récupérée depuis l'API.")
+                st.success("Triangulation serveur réussie ! Prédiction récupérée depuis l'API.")
                 
                 # --- VISUALISATION DES 3 COMPOSANTES (Phase 6.1 Guideline) ---
                 col1, col2, col3 = st.columns(3)
                 
                 # A. La Réalité Capturée
-                col1.subheader("📸 Caméra (leftImg8bit)")
+                col1.subheader("Caméra (leftImg8bit)")
                 col1.image(Image.open(selected_path), use_container_width=True)
                 
                 # B. Le Masque Parfait fourni par Cityscapes
-                col2.subheader("🎯 Masque Vérité (Attendu)")
+                col2.subheader("Masque Vérité (Attendu)")
                 if os.path.exists(gt_color_path):
                     col2.image(Image.open(gt_color_path), use_container_width=True)
                 else:
                     col2.warning("Non fourni (Normal pour le Test-Set de compétition).")
                     
                 # C. L'Intelligence Artificielle en Action
-                col3.subheader("🧠 Prédiction FastAPI (Notre IA)")
+                col3.subheader("Prédiction FastAPI (Notre IA)")
                 col3.image(predicted_mask, use_container_width=True)
                 
                 # Affichage des classes (Codées en dur ici car l'API renvoie directement une image pour optimiser)
                 CLASSES = ['void', 'flat', 'construction', 'object', 'nature', 'sky', 'human', 'vehicle']
-                with st.expander("Consulter la palette de couleurs sémantiques 🎨"):
+                with st.expander("Consulter la palette de couleurs sémantiques "):
                     st.write(", ".join(CLASSES))
                     
             else:
-                st.error(f"❌ Erreur Serveur (HTTP {response.status_code}) : Vous devez vérifier ce que l'API imprime dans son propre terminal.")
+                st.error(f"Erreur Serveur (HTTP {response.status_code}) : Vous devez vérifier ce que l'API imprime dans son propre terminal.")
                 
         except requests.exceptions.ConnectionError:
-            st.error(f"💥 ERREUR CRITIQUE : L'API est injoignable sur l'URL ciblée (`{API_URL}`).")
-            # st.info("👉 Si vous testez en local pour GCP, lancez le serveur FastAPI via : `cd api && uvicorn main:app --port 8000` et vérifiez l'API_URL.")
-            st.info("👉 Si vous testez en local pour Hugging Face, lancez le serveur FastAPI via : `cd api && uvicorn main:app --port 7860` et vérifiez l'API_URL.")
+            st.error(f"ERREUR CRITIQUE : L'API est injoignable sur l'URL ciblée (`{API_URL}`).")
+            # st.info("Si vous testez en local pour GCP, lancez le serveur FastAPI via : `cd api && uvicorn main:app --port 8000` et vérifiez l'API_URL.")
+            st.info("Si vous testez en local pour Hugging Face, lancez le serveur FastAPI via : `cd api && uvicorn main:app --port 7860` et vérifiez l'API_URL.")

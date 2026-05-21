@@ -41,14 +41,14 @@ async def lifespan(app: FastAPI):
         try:
             os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
             import tensorflow as tf
-            logger.info("⏳ Chargement du modèle Keras...")
+            logger.info("Chargement du modèle Keras...")
             model = tf.keras.models.load_model(MODEL_PATH, compile=False)
-            logger.info("✅ Modèle chargé avec succès !")
+            logger.info("Modèle chargé avec succès !")
         except Exception as e:
             model = None
-            logger.error(f"❌ Erreur critique de TensorFlow : {e}")
+            logger.error(f"Erreur critique de TensorFlow : {e}")
     else:
-        logger.warning(f"⚠️ Modèle introuvable ({MODEL_PATH}). L'API tourne en 'MOCK MODE'.")
+        logger.warning(f"Modèle introuvable ({MODEL_PATH}). L'API tourne en 'MOCK MODE'.")
     yield
     # Nettoyage si nécessaire
     model = None

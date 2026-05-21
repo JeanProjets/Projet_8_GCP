@@ -5,7 +5,7 @@ Félicitations pour le nettoyage du projet ! Nous avons désormais un dossier pr
 Google Cloud propose une commande magique : `gcloud run deploy --source .`. 
 Cette commande va prendre tout ton dossier local, l'envoyer de façon sécurisée à Google, construire le conteneur Docker dans le cloud, et le déployer.
 
-## 🔄 Comment basculer entre GCP et Hugging Face ?
+## Comment basculer entre GCP et Hugging Face ?
 
 Si tu as d'abord testé Hugging Face mais que tu veux déployer sur GCP (ou inversement), tu dois ajuster les ports (GCP préfère généralement les ports 8000/8501 standards, et Hugging Face exige le port 7860).
 
